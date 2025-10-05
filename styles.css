@@ -1,0 +1,640 @@
+/* Reset và các biến màu sắc cơ bản */
+:root {
+    --primary: #8A1538;
+    --primary-light: #b0526e;
+    --primary-dark: #73112f;
+    --text-light: #ffffff;
+    --text-dark: #333333;
+    --bg-light: #f9f9f9;
+    --bg-white: #ffffff;
+    --border-light: #eaeaea;
+    --border-radius-sm: 5px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 20px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 2px 5px rgba(0,0,0,0.15);
+    --transition-default: all 0.2s ease;
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    background-color: var(--bg-light);
+    font-family: 'Times New Roman', Times, serif;
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+/* Header styling */
+#header-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between; /* Thêm dòng này */
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--bg-white);
+    box-shadow: var(--shadow-sm);
+}
+
+#agribank-logo-container {
+    flex-shrink: 0;
+    width: 120px;
+    margin-right: 32px; /* Tạo khoảng cách với phần controls */
+}
+
+#agribank-logo {
+    width: 100%;
+    height: auto;
+}
+
+#header-text {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 0px;
+}
+
+#header-text h1, #header-text h2 {
+    margin: 0;
+    color: var(--primary);
+    line-height: 1.2;
+}
+
+#header-text h1 {
+    font-size: 22px;
+    margin-bottom: var(--spacing-xs);
+}
+
+#header-text h2 {
+    font-size: 20px;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Controls container */
+#controls-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xs);
+}
+
+/* File selection */
+#file-selection {
+    display: flex;
+    align-items: center;
+}
+
+#file-selection input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+#file-selection label {
+    cursor: pointer;
+    background-color: #73112f;
+    color: #ffffff;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    font-weight: 600;
+    font-size: 14px;
+    margin-right: var(--spacing-sm);
+    transition: var(--transition-default);
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+}
+
+#file-selection label:hover {
+    background-color: #8A1538;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+#fileName {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background-color: #f3f4f6;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-light);
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+    color: var(--text-dark);
+}
+
+/* Image selection (similar to file selection) */
+#image-selection {
+    display: flex;
+    align-items: center;
+}
+
+#image-selection input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+#image-selection label {
+    cursor: pointer;
+    background-color: var(--primary-dark); /* Using primary dark color */
+    color: var(--text-light);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    font-weight: 600;
+    font-size: 14px;
+    margin-right: var(--spacing-sm); /* Space between label and file name */
+    transition: var(--transition-default);
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+}
+
+#image-selection label:hover {
+    background-color: var(--primary); /* Using primary color on hover */
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+#image-selection #imageName {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background-color: #f3f4f6;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-light);
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px; /* Keep max width consistent */
+    color: var(--text-dark);
+}
+
+/* Capture selection (similar to file/image selection) */
+#capture-selection {
+    display: flex;
+    align-items: center;
+}
+
+#capture-selection input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+#capture-selection label {
+    cursor: pointer;
+    background-color: var(--primary-dark); /* Using primary dark color */
+    color: var(--text-light);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    font-weight: 600;
+    font-size: 14px;
+    margin-right: var(--spacing-sm); /* Space between label and file name */
+    transition: var(--transition-default);
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+}
+
+#capture-selection label:hover {
+    background-color: var(--primary); /* Using primary color on hover */
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+#capture-selection #captureName {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background-color: #f3f4f6;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-light);
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px; /* Keep max width consistent */
+    color: var(--text-dark);
+}
+
+/* Controls buttons */
+#controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #73112f;
+    color: #ffffff;
+    border: none;
+    border-radius: var(--border-radius-lg);
+    transition: var(--transition-default);
+    white-space: nowrap;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+}
+
+button:hover {
+    background-color: #8A1538;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Search input */
+#searchInput {
+    width: calc(100% - 30px);
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin: var(--spacing-lg) auto 0;
+    font-size: 15px;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-default);
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 1px 5px rgba(138, 21, 56, 0.2);
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+/* Result area */
+#resultArea {
+    margin: var(--spacing-md) auto;
+    width: calc(100% - 30px);
+    background-color: var(--bg-white);
+    padding: var(--spacing-lg);
+    max-height: calc(100vh - 220px);
+    min-height: 200px;
+    overflow-y: auto;
+    flex-grow: 1;
+    border-radius: var(--border-radius-md);
+    text-align: left;
+    font-size: 15px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+/* Footer styling */
+#footer {
+    text-align: center;
+    background-color: #73112f;
+    padding: var(--spacing-md) 0;
+    margin-top: auto;
+}
+
+#footer p {
+    margin: 3px 0;
+    font-size: 15px;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+#footer p:last-child {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    #header-container {
+        padding: var(--spacing-sm);
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #agribank-logo-container {
+        width: 100px;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    #header-text {
+        padding-right: 0;
+        width: 100%;
+    }
+    
+    #header-text h1 {
+        font-size: 18px;
+    }
+    
+    #header-text h2 {
+        font-size: 16px;
+        margin-bottom: var(--spacing-xs);
+    }
+    
+    #controls-container {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        margin-top: var(--spacing-xs);
+    }
+    
+    #file-selection, #controls {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    #fileName {
+        max-width: 120px;
+    }
+    
+    #resultArea {
+        max-height: calc(100vh - 280px);
+        padding: var(--spacing-md);
+    }
+}
+
+#searchButton:active {
+    background-color: #4a0b1f !important;
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Đảm bảo nút search có thể nhận focus */
+#searchButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(115, 17, 47, 0.3);
+}
+
+/* Column F info */
+#columnFInfo {
+    font-style: italic;
+    background-color: #f8f9fa;
+    border-left: 4px solid #73112f;
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin: var(--spacing-md) auto;
+    width: calc(100% - 30px);
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    color: #73112f;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+}
+
+#columnFInfo:before {
+    content: "⚠️";
+    margin-right: var(--spacing-sm);
+    font-size: 18px;
+}
+
+/* Result area styles */
+#resultArea div {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    background-color: #f8f9fa;
+    border-left: 3px solid #73112f;
+    transition: var(--transition-default);
+    line-height: 1.5;
+}
+
+#resultArea div:hover {
+    background-color: #f0f2f5;
+}
+
+#resultArea div:last-child {
+    margin-bottom: 0;
+}
+
+/* Consistent style for Column F highlights */
+.column-f-highlight {
+    display: inline-block;
+    color: #ffffff !important;
+    font-weight: bold !important;
+    font-size: 1.1em !important;
+    background-color: #73112f !important;
+    padding: var(--spacing-xs) var(--spacing-md) !important;
+    border-radius: var(--border-radius-sm) !important;
+    box-shadow: var(--shadow-sm) !important;
+    margin: 0 3px !important;
+    position: relative !important;
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+    transition: var(--transition-default) !important;
+}
+
+.column-f-highlight:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-md) !important;
+    background-color: #8A1538 !important;
+}
+
+/* Đảm bảo không có phần tử con nào trong column-f-highlight có background màu trắng */
+.column-f-highlight * {
+    background-color: inherit !important;
+    color: #ffffff !important;
+}
+
+/* Thêm style cho phần tử span trong column-f-highlight nếu có */
+.column-f-highlight span {
+    background-color: #73112f !important;
+    color: #ffffff !important;
+}
+
+/* Đảm bảo không có style mặc định nào ghi đè */
+#resultArea .column-f-highlight,
+#resultArea div .column-f-highlight {
+    background-color: #73112f !important;
+    color: #ffffff !important;
+}
+
+.column-f-label {
+    position: absolute !important;
+    top: -10px !important;
+    left: 0 !important;
+    background-color: #ffffff !important;
+    color: #73112f !important;
+    font-size: 9px !important;
+    padding: 1px 4px !important;
+    border-radius: 3px !important;
+    font-weight: bold !important;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 0;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    z-index: 1001;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.image-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    margin: 20px 0;
+}
+
+#cropImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.crop-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ddd;
+}
+
+#cropButton, #cancelCropButton {
+    padding: 12px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#cropButton {
+    background-color: #8A1538;
+    color: white;
+}
+
+#cropButton:hover {
+    background-color: #6d102c;
+}
+
+#cancelCropButton {
+    background-color: #6c757d;
+    color: white;
+}
+
+#cancelCropButton:hover {
+    background-color: #5a6268;
+}
+
+/* Selection overlay styles */
+.selection-overlay {
+    position: absolute;
+    border: 2px solid #8A1538;
+    background-color: rgba(138, 21, 56, 0.1);
+    cursor: move;
+}
+
+.selection-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #8A1538;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+.selection-handle.nw {
+    top: -10px;
+    left: -10px;
+    cursor: nw-resize;
+}
+
+.selection-handle.ne {
+    top: -10px;
+    right: -10px;
+    cursor: ne-resize;
+}
+
+.selection-handle.sw {
+    bottom: -10px;
+    left: -10px;
+    cursor: sw-resize;
+}
+
+.selection-handle.se {
+    bottom: -10px;
+    right: -10px;
+    cursor: se-resize;
+}
+
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+    .modal-content {
+        padding: 10px;
+    }
+
+    .close {
+        right: 15px;
+        top: 5px;
+        font-size: 24px;
+    }
+
+    .image-container {
+        margin: 10px 0;
+    }
+
+    #cropButton, #cancelCropButton {
+        padding: 15px 40px;
+        font-size: 18px;
+    }
+
+    .selection-handle {
+        width: 30px;
+        height: 30px;
+    }
+}

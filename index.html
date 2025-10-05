@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Hỗ trợ Agribanker</title>
+</head>
+<body>
+    <div id="header-container">
+        <div id="agribank-logo-container">
+            <img id="agribank-logo" src="./Agribank.png" alt="Agribank Logo" />
+        </div>
+        <div id="header-text">
+            <h1>NGÂN HÀNG NÔNG NGHIỆP VÀ PHÁT TRIỂN NÔNG THÔN</h1>
+            <h2>CHI NHÁNH CẦN THƠ II</h2>
+            <div id="controls-container">
+                <div id="file-selection">
+                    <input type="file" id="fileInput" accept=".xlsx, .xls">
+                    <label for="fileInput">Chọn File Excel</label>
+                    <span id="fileName">data.xlsx</span>
+                </div>
+        
+                <div id="image-selection">
+                    <input type="file" id="imageInput" accept="image/*">
+                    <label for="imageInput">Chọn Ảnh OCR</label>
+                    <span id="imageName">Chưa có ảnh</span>
+                </div>
+        
+                <div id="capture-selection" style="margin-left: 10px;">
+                    <div class="input-group">
+                        <label for="captureInput" class="input-label">Chụp ảnh:</label>
+                        <input type="file" id="captureInput" accept="image/*" capture="environment" class="file-input">
+                        <span id="captureName" class="file-name">Chưa chụp</span>
+                    </div>
+                </div>
+        
+                <div id="controls">
+                    <button id="startListeningButton">Bắt Đầu Nói</button>
+                    <button id="searchButton">Tìm Kiếm</button>
+                    <button id="clearResultsButton">Xóa Kết Quả</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+
+    <!--<input type="text" id="searchInput" placeholder="Tìm kiếm...">-->
+   <textarea id="searchInput" rows="2" style="resize:vertical"></textarea>
+
+    <div id="resultArea"></div>
+    
+    <!-- Modal chọn vùng ảnh -->
+    <div id="imageCropModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Chọn vùng ảnh</h2>
+            <div class="image-container">
+                <img id="cropImage" src="" alt="Ảnh cần chọn vùng">
+            </div>
+            <div class="crop-controls">
+                <button id="cropButton">Cắt ảnh</button>
+                <button id="cancelCropButton">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <p>&copy; 2024 Agribank Chi nhánh Cần Thơ II. Bộ phận điện toán.</p>
+        <p>Liên hệ: Nguyễn Thành Trung; Cellphone: 0947.86.86.82; Email: trungnguyenthanh1@agribank.com.vn</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <script src="script.js"></script>
+</body>
+</html>

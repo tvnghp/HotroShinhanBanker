@@ -1,8 +1,8 @@
-/* Reset và các biến màu sắc cơ bản */
+﻿/* Reset vĂ  cĂ¡c biáº¿n mĂ u sáº¯c cÆ¡ báº£n */
 :root {
-    --primary: #8A1538;
-    --primary-light: #b0526e;
-    --primary-dark: #73112f;
+    --primary: #0057A4;
+    --primary-light: #2F80ED;
+    --primary-dark: #003E73;
     --text-light: #ffffff;
     --text-dark: #333333;
     --bg-light: #f9f9f9;
@@ -41,7 +41,7 @@ body, html {
 #header-container {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between; /* Thêm dòng này */
+    justify-content: space-between; /* ThĂªm dĂ²ng nĂ y */
     padding: var(--spacing-md) var(--spacing-lg);
     background-color: var(--bg-white);
     box-shadow: var(--shadow-sm);
@@ -50,7 +50,7 @@ body, html {
 #agribank-logo-container {
     flex-shrink: 0;
     width: 120px;
-    margin-right: 32px; /* Tạo khoảng cách với phần controls */
+    margin-right: 32px; /* Táº¡o khoáº£ng cĂ¡ch vá»›i pháº§n controls */
 }
 
 #agribank-logo {
@@ -110,7 +110,7 @@ body, html {
 
 #file-selection label {
     cursor: pointer;
-    background-color: #73112f;
+    background-color: var(--primary-dark);
     color: #ffffff;
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius-lg);
@@ -123,7 +123,7 @@ body, html {
 }
 
 #file-selection label:hover {
-    background-color: #8A1538;
+    background-color: var(--primary);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
@@ -249,7 +249,7 @@ button {
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: 14px;
     cursor: pointer;
-    background-color: #73112f;
+    background-color: var(--primary-dark);
     color: #ffffff;
     border: none;
     border-radius: var(--border-radius-lg);
@@ -260,7 +260,7 @@ button {
 }
 
 button:hover {
-    background-color: #8A1538;
+    background-color: var(--primary);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
@@ -280,7 +280,7 @@ button:hover {
 #searchInput:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 1px 5px rgba(138, 21, 56, 0.2);
+    box-shadow: 0 1px 5px rgba(0, 87, 164, 0.2);
     word-break: break-word;
     white-space: pre-wrap;
 }
@@ -305,7 +305,7 @@ button:hover {
 /* Footer styling */
 #footer {
     text-align: center;
-    background-color: #73112f;
+    background-color: var(--primary-dark);
     padding: var(--spacing-md) 0;
     margin-top: auto;
 }
@@ -371,28 +371,28 @@ button:hover {
 }
 
 #searchButton:active {
-    background-color: #4a0b1f !important;
+    background-color: #002A54 !important;
     transform: translateY(0);
     box-shadow: var(--shadow-sm);
 }
 
-/* Đảm bảo nút search có thể nhận focus */
+/* Äáº£m báº£o nĂºt search cĂ³ thá»ƒ nháº­n focus */
 #searchButton:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(115, 17, 47, 0.3);
+    box-shadow: 0 0 0 3px rgba(0, 87, 164, 0.3);
 }
 
 /* Column F info */
 #columnFInfo {
     font-style: italic;
     background-color: #f8f9fa;
-    border-left: 4px solid #73112f;
+    border-left: 4px solid var(--primary-dark);
     padding: var(--spacing-sm) var(--spacing-md);
     margin: var(--spacing-md) auto;
     width: calc(100% - 30px);
     border-radius: var(--border-radius-sm);
     font-weight: 600;
-    color: #73112f;
+    color: var(--primary-dark);
     display: flex;
     align-items: center;
     box-shadow: var(--shadow-sm);
@@ -400,7 +400,7 @@ button:hover {
 }
 
 #columnFInfo:before {
-    content: "⚠️";
+    content: "â ï¸";
     margin-right: var(--spacing-sm);
     font-size: 18px;
 }
@@ -411,7 +411,7 @@ button:hover {
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: var(--border-radius-md);
     background-color: #f8f9fa;
-    border-left: 3px solid #73112f;
+    border-left: 3px solid var(--primary-dark);
     transition: var(--transition-default);
     line-height: 1.5;
 }
@@ -430,7 +430,7 @@ button:hover {
     color: #ffffff !important;
     font-weight: bold !important;
     font-size: 1.1em !important;
-    background-color: #73112f !important;
+    background-color: var(--primary-dark) !important;
     padding: var(--spacing-xs) var(--spacing-md) !important;
     border-radius: var(--border-radius-sm) !important;
     box-shadow: var(--shadow-sm) !important;
@@ -444,25 +444,25 @@ button:hover {
 .column-f-highlight:hover {
     transform: scale(1.02);
     box-shadow: var(--shadow-md) !important;
-    background-color: #8A1538 !important;
+    background-color: var(--primary) !important;
 }
 
-/* Đảm bảo không có phần tử con nào trong column-f-highlight có background màu trắng */
+/* Äáº£m báº£o khĂ´ng cĂ³ pháº§n tá»­ con nĂ o trong column-f-highlight cĂ³ background mĂ u tráº¯ng */
 .column-f-highlight * {
     background-color: inherit !important;
     color: #ffffff !important;
 }
 
-/* Thêm style cho phần tử span trong column-f-highlight nếu có */
+/* ThĂªm style cho pháº§n tá»­ span trong column-f-highlight náº¿u cĂ³ */
 .column-f-highlight span {
-    background-color: #73112f !important;
+    background-color: var(--primary-dark) !important;
     color: #ffffff !important;
 }
 
-/* Đảm bảo không có style mặc định nào ghi đè */
+/* Äáº£m báº£o khĂ´ng cĂ³ style máº·c Ä‘á»‹nh nĂ o ghi Ä‘Ă¨ */
 #resultArea .column-f-highlight,
 #resultArea div .column-f-highlight {
-    background-color: #73112f !important;
+    background-color: var(--primary-dark) !important;
     color: #ffffff !important;
 }
 
@@ -471,7 +471,7 @@ button:hover {
     top: -10px !important;
     left: 0 !important;
     background-color: #ffffff !important;
-    color: #73112f !important;
+    color: var(--primary-dark) !important;
     font-size: 9px !important;
     padding: 1px 4px !important;
     border-radius: 3px !important;
@@ -554,12 +554,12 @@ button:hover {
 }
 
 #cropButton {
-    background-color: #8A1538;
+    background-color: var(--primary);
     color: white;
 }
 
 #cropButton:hover {
-    background-color: #6d102c;
+    background-color: var(--primary-dark);
 }
 
 #cancelCropButton {
@@ -574,8 +574,8 @@ button:hover {
 /* Selection overlay styles */
 .selection-overlay {
     position: absolute;
-    border: 2px solid #8A1538;
-    background-color: rgba(138, 21, 56, 0.1);
+    border: 2px solid var(--primary);
+    background-color: rgba(0, 87, 164, 0.1);
     cursor: move;
 }
 
@@ -583,7 +583,7 @@ button:hover {
     position: absolute;
     width: 20px;
     height: 20px;
-    background-color: #8A1538;
+    background-color: var(--primary);
     border: 2px solid white;
     border-radius: 50%;
 }
@@ -638,3 +638,4 @@ button:hover {
         height: 30px;
     }
 }
+

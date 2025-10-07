@@ -210,22 +210,52 @@ function formatResultRow(row, searchTerm) {
         const lowerCellStr = cellStr.toLowerCase();
         const lowerSearchTerm = searchTerm.toLowerCase();
         
-        let formattedCell = cellStr;
+        // Tách phần "Câu trả lời đúng là: " hoặc "Câu trả lời đúng:" và phần câu trả lời
+        let prefixText = "Câu trả lời đúng là: ";
+        let prefixIndex = cellStr.indexOf(prefixText);
         
-        // Highlight từ khóa tìm kiếm nếu có
-        if (lowerSearchTerm && lowerSearchTerm !== '%%' && lowerCellStr.includes(lowerSearchTerm)) {
-            const startIndex = lowerCellStr.indexOf(lowerSearchTerm);
-            const endIndex = startIndex + searchTerm.length;
-            
-            formattedCell = cellStr.substring(0, startIndex) + 
-                   `<span style="background-color: #ffe2e8; font-weight: bold;">${cellStr.substring(startIndex, endIndex)}</span>` + 
-                   cellStr.substring(endIndex);
+        // Nếu không tìm thấy "Câu trả lời đúng là: ", thử tìm "Câu trả lời đúng:"
+        if (prefixIndex === -1) {
+            prefixText = "Câu trả lời đúng: ";
+            prefixIndex = cellStr.indexOf(prefixText);
         }
         
-        result = `<span class="column-f-highlight" style="color: white; font-weight: bold; font-size: 1.1em; background-color: #8A1538; padding: 4px 10px; border-radius: 4px; box-shadow: 0 2px 5px rgba(138, 21, 56, 0.4); margin: 0 3px; display: inline-block; position: relative; max-width: 100%; overflow-wrap: break-word;">
+        if (prefixIndex !== -1) {
+            const splitIndex = prefixIndex + prefixText.length;
+            const beforePrefix = cellStr.substring(0, prefixIndex);
+            const normalPrefix = beforePrefix + prefixText;
+            let highlightedAnswer = cellStr.substring(splitIndex);
+            
+            // Áp dụng highlight từ khóa tìm kiếm cho phần câu trả lời nếu cần
+            if (lowerSearchTerm && lowerSearchTerm !== '%%' && highlightedAnswer.toLowerCase().includes(lowerSearchTerm)) {
+                const answerStartIndex = highlightedAnswer.toLowerCase().indexOf(lowerSearchTerm);
+                const answerEndIndex = answerStartIndex + searchTerm.length;
+                
+                highlightedAnswer = highlightedAnswer.substring(0, answerStartIndex) + 
+                       `<span style="background-color: #ffe2e8; font-weight: bold;">${highlightedAnswer.substring(answerStartIndex, answerEndIndex)}</span>` + 
+                       highlightedAnswer.substring(answerEndIndex);
+            }
+            
+            result = `<span class="column-f-label" style="background-color: #FFD700; color: #8A1538; font-size: 9px; padding: 1px 4px; border-radius: 3px; font-weight: bold; margin-right: 5px;">CỘT F</span><span style="color: #333; font-size: 1.1em;">${normalPrefix}</span><span style="color: white; font-weight: bold; font-size: 1.1em; background-color: #8A1538; padding: 4px 10px; border-radius: 4px; box-shadow: 0 2px 5px rgba(138, 21, 56, 0.4); display: inline-block;">${highlightedAnswer}</span>`;
+        } else {
+            // Nếu không có prefix, áp dụng format cũ với highlight toàn bộ
+            let formattedCell = cellStr;
+            
+            // Highlight từ khóa tìm kiếm nếu có
+            if (lowerSearchTerm && lowerSearchTerm !== '%%' && lowerCellStr.includes(lowerSearchTerm)) {
+                const startIndex = lowerCellStr.indexOf(lowerSearchTerm);
+                const endIndex = startIndex + searchTerm.length;
+                
+                formattedCell = cellStr.substring(0, startIndex) + 
+                       `<span style="background-color: #ffe2e8; font-weight: bold;">${cellStr.substring(startIndex, endIndex)}</span>` + 
+                       cellStr.substring(endIndex);
+            }
+            
+            result = `<span class="column-f-highlight" style="color: white; font-weight: bold; font-size: 1.1em; background-color: #8A1538; padding: 4px 10px; border-radius: 4px; box-shadow: 0 2px 5px rgba(138, 21, 56, 0.4); margin: 0 3px; display: inline-block; position: relative; max-width: 100%; overflow-wrap: break-word;">
                  <span class="column-f-label" style="position: absolute; top: -10px; left: 0; background-color: #FFD700; color: #8A1538; font-size: 9px; padding: 1px 4px; border-radius: 3px; font-weight: bold;">CỘT F</span>
                  ${formattedCell}
                </span>`;
+        }
     }
     
     return `<div style="margin: 10px 0;">${result}</div>`;

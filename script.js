@@ -1,5 +1,6 @@
 let excelData = [];
 let recognition;
+let searchTimeout; // Biến để debounce tìm kiếm
 
 // Biến toàn cục cho việc chọn vùng ảnh
 let isSelecting = false;
@@ -17,49 +18,145 @@ function initSpeechRecognition() {
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
         recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'vi-VN';
-        recognition.interimResults = false;
+        recognition.interimResults = true; // Bật kết quả tạm thời
+        recognition.continuous = true; // Tiếp tục lắng nghe
         recognition.maxAlternatives = 1;
+        
+        // Thêm event listener cho khi bắt đầu
+        recognition.onstart = () => {
+            console.log('Đã bắt đầu nhận diện giọng nói');
+            document.getElementById('startListeningButton').textContent = 'Đang lắng nghe...';
+            document.getElementById('startListeningButton').style.backgroundColor = '#4a9b4a';
+        };
+        
+        // Biến để lưu kết quả cuối cùng
+        let finalTranscript = '';
         
         // Xử lý kết quả nhận diện
         recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript.toLowerCase();
-            const cleanedTranscript = transcript.replace(/[.,!?;:]/g, '').trim();
-            console.log('Văn bản đã làm sạch:', cleanedTranscript);
-            console.log('Nhận diện văn bản:', transcript);
+            let interimTranscript = '';
             
-            // Kiểm tra nếu là lệnh xóa
-            if (transcript.includes('xóa') || transcript.includes('xoá') || 
-                transcript.includes('làm mới') || transcript.includes('xóa kết quả')) {
-                clearResults();
-                showNotification('Đã xóa kết quả theo lệnh giọng nói');
-            } 
-            // Kiểm tra nếu là lệnh hiển thị tất cả (phần trăm phần trăm)
-            else if (transcript.includes('phần trăm phần trăm') || 
-                     transcript.includes('hiển thị tất cả') || 
-                     transcript.includes('hiện tất cả') ||
-                     transcript.includes('tất cả') ||
-                     transcript.includes('hiện hết') ||
-                     transcript.includes('xem hết')) {
-                document.getElementById('searchInput').value = '%%';
-                searchExcelData('%%');
-                showNotification('Hiển thị tất cả dữ liệu theo yêu cầu');
-            } else {
-                // Nếu không phải lệnh đặc biệt, thì xử lý như tìm kiếm bình thường
-                document.getElementById('searchInput').value = cleanedTranscript;
-                searchExcelData(cleanedTranscript);
+            // Xử lý tất cả kết quả
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                
+                if (event.results[i].isFinal) {
+                    // Kết quả cuối cùng
+                    finalTranscript += transcript + ' ';
+                } else {
+                    // Kết quả tạm thời
+                    interimTranscript += transcript;
+                }
             }
             
-            // Khôi phục nút sau khi có kết quả
-            resetListeningButton();
+            // Hiển thị kết quả tạm thời ngay lập tức
+            if (interimTranscript) {
+                const cleanedInterim = interimTranscript.replace(/[.,!?;:]/g, '').trim();
+                if (cleanedInterim.length > 0) {
+                    document.getElementById('searchInput').value = cleanedInterim;
+                    console.log('Kết quả tạm thời:', cleanedInterim);
+                    
+                    // Tự động tìm kiếm với debounce (chỉ tìm kiếm nếu từ có ít nhất 2 ký tự)
+                    if (cleanedInterim.length >= 2) {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(() => {
+                            searchExcelData(cleanedInterim);
+                        }, 500); // Tìm kiếm sau 500ms im lặng
+                    }
+                }
+            }
+            
+            // Xử lý kết quả cuối cùng khi có
+            if (finalTranscript) {
+                const cleanedFinal = finalTranscript.replace(/[.,!?;:]/g, '').trim().toLowerCase();
+                console.log('Kết quả cuối cùng:', cleanedFinal);
+                
+                // Kiểm tra nếu là lệnh xóa
+                if (cleanedFinal.includes('xóa') || cleanedFinal.includes('xoá') || 
+                    cleanedFinal.includes('làm mới') || cleanedFinal.includes('xóa kết quả')) {
+                    clearResults();
+                    showNotification('Đã xóa kết quả theo lệnh giọng nói');
+                    finalTranscript = ''; // Reset
+                } 
+                // Kiểm tra nếu là lệnh hiển thị tất cả
+                else if (cleanedFinal.includes('phần trăm phần trăm') || 
+                         cleanedFinal.includes('hiển thị tất cả') || 
+                         cleanedFinal.includes('hiện tất cả') ||
+                         cleanedFinal.includes('tất cả') ||
+                         cleanedFinal.includes('hiện hết') ||
+                         cleanedFinal.includes('xem hết')) {
+                    document.getElementById('searchInput').value = '%%';
+                    searchExcelData('%%');
+                    showNotification('Hiển thị tất cả dữ liệu theo yêu cầu');
+                    finalTranscript = ''; // Reset
+                } else if (cleanedFinal.length > 0) {
+                    // Nếu không phải lệnh đặc biệt, thì xử lý như tìm kiếm bình thường
+                    document.getElementById('searchInput').value = cleanedFinal;
+                    searchExcelData(cleanedFinal);
+                    finalTranscript = ''; // Reset
+                }
+            }
         };
 
         recognition.onerror = (event) => {
             console.error('Lỗi trong quá trình nhận diện:', event.error);
-            resetListeningButton();
+            
+            // Xử lý từng loại lỗi cụ thể
+            switch(event.error) {
+                case 'not-allowed':
+                    showNotification('Quyền truy cập microphone bị từ chối. Vui lòng cho phép quyền này trong cài đặt trình duyệt.', 'error');
+                    resetListeningButton();
+                    break;
+                case 'service-not-allowed':
+                    showNotification('Dịch vụ nhận diện giọng nói không được phép. Vui lòng kiểm tra cài đặt.', 'error');
+                    resetListeningButton();
+                    break;
+                case 'no-speech':
+                    console.log('Không phát hiện giọng nói, tiếp tục lắng nghe...');
+                    // Không reset nút, tiếp tục lắng nghe
+                    break;
+                case 'audio-capture':
+                    showNotification('Không thể truy cập microphone. Vui lòng kiểm tra thiết bị.', 'error');
+                    resetListeningButton();
+                    break;
+                case 'network':
+                    showNotification('Lỗi mạng. Vui lòng kiểm tra kết nối internet.', 'error');
+                    resetListeningButton();
+                    break;
+                case 'aborted':
+                    console.log('Nhận diện giọng nói đã bị hủy');
+                    resetListeningButton();
+                    break;
+                case 'language-not-supported':
+                    showNotification('Ngôn ngữ không được hỗ trợ.', 'error');
+                    resetListeningButton();
+                    break;
+                default:
+                    console.log('Lỗi không xác định:', event.error);
+                    resetListeningButton();
+                    break;
+            }
         };
         
         recognition.onend = () => {
+            console.log('Kết thúc nhận diện giọng nói');
             resetListeningButton();
+        };
+        
+        recognition.onspeechstart = () => {
+            console.log('Phát hiện giọng nói');
+        };
+        
+        recognition.onspeechend = () => {
+            console.log('Kết thúc phát hiện giọng nói');
+        };
+        
+        recognition.onsoundstart = () => {
+            console.log('Phát hiện âm thanh');
+        };
+        
+        recognition.onsoundend = () => {
+            console.log('Kết thúc phát hiện âm thanh');
         };
     } else {
         showNotification('Trình duyệt của bạn không hỗ trợ nhận diện giọng nói', 'error');
@@ -67,23 +164,90 @@ function initSpeechRecognition() {
     }
 }
 
+// Hàm thử nghiệm microphone trước khi bắt đầu nhận diện
+function testMicrophoneAccess() {
+    return new Promise((resolve) => {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            resolve(false);
+            return;
+        }
+        
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                // Nếu thành công, dừng stream ngay lập tức
+                stream.getTracks().forEach(track => track.stop());
+                resolve(true);
+            })
+            .catch(error => {
+                console.log('Lỗi truy cập microphone:', error);
+                resolve(false);
+            });
+    });
+}
+
+// Hàm kiểm tra quyền microphone
+async function checkMicrophonePermission() {
+    try {
+        // Kiểm tra API getUserMedia
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            // Nếu thành công, dừng stream ngay lập tức
+            stream.getTracks().forEach(track => track.stop());
+            console.log('Quyền microphone đã được cấp');
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error('Lỗi kiểm tra quyền microphone:', error);
+        return false;
+    }
+}
+
 // Hàm để khởi động nhận diện giọng nói
-function startListening() {
+async function startListening() {
     if (!recognition) {
         initSpeechRecognition();
     }
     
     try {
+        // Kiểm tra quyền microphone trước
+        const hasPermission = await testMicrophoneAccess();
+        if (!hasPermission) {
+            showNotification('Vui lòng cho phép quyền truy cập microphone để sử dụng tính năng nhận diện giọng nói.', 'warning');
+            return;
+        }
+        
+        // Kiểm tra nếu đang lắng nghe thì dừng lại
+        if (recognition.state && recognition.state === 'listening') {
+            recognition.stop();
+            resetListeningButton();
+            return;
+        }
+        
         recognition.start();
-        // Thêm thông báo đang lắng nghe
-        document.getElementById('startListeningButton').textContent = 'Đang lắng nghe...';
-        document.getElementById('startListeningButton').style.backgroundColor = '#4a9b4a';
         
         // Hiển thị hướng dẫn lệnh giọng nói
         showVoiceCommands();
+        
+        console.log('Bắt đầu nhận diện giọng nói với interim results');
     } catch (error) {
         console.error('Lỗi khi bắt đầu nhận diện:', error);
-        resetListeningButton();
+        if (error.name === 'InvalidStateError') {
+            // Nếu đã đang chạy, thử dừng và khởi động lại
+            try {
+                recognition.stop();
+                setTimeout(() => {
+                    recognition.start();
+                    showVoiceCommands();
+                }, 100);
+            } catch (retryError) {
+                console.error('Lỗi khi thử lại:', retryError);
+                resetListeningButton();
+            }
+        } else {
+            showNotification('Không thể bắt đầu nhận diện giọng nói. Vui lòng thử lại.', 'error');
+            resetListeningButton();
+        }
     }
 }
 
@@ -941,25 +1105,90 @@ async function cropImage() {
     }
 }
 
+// Hàm toggle menu chức năng
+function toggleAdvancedMenu() {
+    const toggleBtn = document.getElementById('toggleMenuBtn');
+    const advancedMenu = document.getElementById('advanced-menu');
+    
+    toggleBtn.classList.toggle('active');
+    advancedMenu.classList.toggle('active');
+    
+    // Thay đổi icon khi mở/đóng
+    if (advancedMenu.classList.contains('active')) {
+        toggleBtn.innerHTML = '✕';
+    } else {
+        toggleBtn.innerHTML = '⚙️';
+    }
+}
+
+// Hàm đồng bộ file selection giữa desktop và mobile
+function syncFileSelection(fileInputId, fileNameId) {
+    const fileInput = document.getElementById(fileInputId);
+    const fileName = document.getElementById(fileNameId);
+    
+    fileInput.addEventListener('change', function(event) {
+        handleFileSelect(event);
+        // Đồng bộ với input khác
+        if (fileInputId === 'fileInput') {
+            document.getElementById('mobileFileName').textContent = fileName.textContent;
+        } else {
+            document.getElementById('fileName').textContent = fileName.textContent;
+        }
+    });
+}
+
+// Hàm đồng bộ image selection giữa desktop và mobile
+function syncImageSelection(imageInputId, imageNameId) {
+    const imageInput = document.getElementById(imageInputId);
+    const imageName = document.getElementById(imageNameId);
+    
+    imageInput.addEventListener('change', function(event) {
+        handleImageSelect(event);
+        // Đồng bộ với input khác
+        if (imageInputId === 'imageInput') {
+            document.getElementById('mobileImageName').textContent = imageName.textContent;
+        } else {
+            document.getElementById('imageName').textContent = imageName.textContent;
+        }
+    });
+}
+
+// Hàm đồng bộ capture selection giữa desktop và mobile
+function syncCaptureSelection(captureInputId, captureNameId) {
+    const captureInput = document.getElementById(captureInputId);
+    const captureName = document.getElementById(captureNameId);
+    
+    captureInput.addEventListener('change', function(event) {
+        handleCaptureSelect(event);
+        // Đồng bộ với input khác
+        if (captureInputId === 'captureInput') {
+            document.getElementById('mobileCaptureName').textContent = captureName.textContent;
+        } else {
+            document.getElementById('captureName').textContent = captureName.textContent;
+        }
+    });
+}
+
 // Thêm kiểm tra trình duyệt khi trang được tải
 window.onload = () => {
     // Kiểm tra trình duyệt
     checkBrowser();
     
-    // Đăng ký sự kiện cho nút chọn file Excel
-    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+    // Đăng ký sự kiện cho các input desktop
+    syncFileSelection('fileInput', 'fileName');
+    syncImageSelection('imageInput', 'imageName');
+    syncCaptureSelection('captureInput', 'captureName');
     
-    // Đăng ký sự kiện cho nút chọn file ảnh
-    document.getElementById('imageInput').addEventListener('change', handleImageSelect);
+    // Đăng ký sự kiện cho các input mobile
+    syncFileSelection('mobileFileInput', 'mobileFileName');
+    syncImageSelection('mobileImageInput', 'mobileImageName');
+    syncCaptureSelection('mobileCaptureInput', 'mobileCaptureName');
     
     // Thêm trình lắng nghe sự kiện paste
     document.body.addEventListener('paste', handlePaste);
     
     // Thêm xử lý paste cho ô tìm kiếm
     document.getElementById('searchInput').addEventListener('paste', handleSearchInputPaste);
-    
-    // Đăng ký sự kiện cho nút chụp ảnh
-    document.getElementById('captureInput').addEventListener('change', handleCaptureSelect);
     
     // Tải file Excel mặc định
     loadDefaultExcelFile();
@@ -1005,6 +1234,9 @@ window.onload = () => {
             modal.style.display = 'none';
         }
     };
+    
+    // Đăng ký sự kiện cho nút toggle menu
+    document.getElementById('toggleMenuBtn').addEventListener('click', toggleAdvancedMenu);
 };
 
 function displayResults(data) {

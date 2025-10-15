@@ -1,8 +1,9 @@
-﻿/* Reset vĂ  cĂ¡c biáº¿n mĂ u sáº¯c cÆ¡ báº£n */
+/* Reset và các biến màu sắc cơ bản */
 :root {
-    --primary: #0057A4;
-    --primary-light: #2F80ED;
-    --primary-dark: #003E73;
+    --primary: #003B70; /* Shinhan blue */
+    --primary-light: #2a5c8f;
+    --primary-dark: #00284d;
+    --accent-gold: #B38E5D;
     --text-light: #ffffff;
     --text-dark: #333333;
     --bg-light: #f9f9f9;
@@ -40,8 +41,9 @@ body, html {
 /* Header styling */
 #header-container {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between; /* ThĂªm dĂ²ng nĂ y */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     padding: var(--spacing-md) var(--spacing-lg);
     background-color: var(--bg-white);
     box-shadow: var(--shadow-sm);
@@ -50,7 +52,7 @@ body, html {
 #agribank-logo-container {
     flex-shrink: 0;
     width: 120px;
-    margin-right: 32px; /* Táº¡o khoáº£ng cĂ¡ch vá»›i pháº§n controls */
+    margin: 0 auto; /* Canh giữa logo */
 }
 
 #agribank-logo {
@@ -64,6 +66,7 @@ body, html {
     flex-direction: column;
     align-items: center;
     padding-right: 0px;
+    text-align: center;
 }
 
 #header-text h1, #header-text h2 {
@@ -91,6 +94,69 @@ body, html {
     width: 100%;
     gap: var(--spacing-md);
     margin-top: var(--spacing-xs);
+    position: relative;
+}
+
+/* Main controls (always visible on desktop) */
+#main-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+/* Menu toggle (nút chức năng) - hidden on desktop */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.toggle-menu-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-default);
+}
+
+.toggle-menu-btn:hover {
+    background-color: var(--primary-dark);
+    transform: scale(1.1);
+}
+
+.toggle-menu-btn.active {
+    background-color: var(--primary-light);
+    transform: rotate(180deg);
+}
+
+/* Advanced menu (hidden by default) */
+.advanced-menu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background-color: var(--bg-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.advanced-menu.active {
+    display: flex;
 }
 
 /* File selection */
@@ -280,7 +346,7 @@ button:hover {
 #searchInput:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 1px 5px rgba(0, 87, 164, 0.2);
+    box-shadow: 0 1px 5px rgba(0, 59, 112, 0.2);
     word-break: break-word;
     white-space: pre-wrap;
 }
@@ -331,8 +397,8 @@ button:hover {
     }
     
     #agribank-logo-container {
-        width: 100px;
-        margin-bottom: var(--spacing-sm);
+        width: 80px;
+        margin-bottom: var(--spacing-xs);
     }
     
     #header-text {
@@ -341,11 +407,12 @@ button:hover {
     }
     
     #header-text h1 {
-        font-size: 18px;
+        font-size: 16px;
+        line-height: 1.1;
     }
     
     #header-text h2 {
-        font-size: 16px;
+        font-size: 14px;
         margin-bottom: var(--spacing-xs);
     }
     
@@ -355,31 +422,107 @@ button:hover {
         margin-top: var(--spacing-xs);
     }
     
-    #file-selection, #controls {
-        width: 100%;
-        justify-content: center;
+    /* Hiển thị nút chức năng trên mobile */
+    .menu-toggle {
+        display: block;
+        top: 5px;
+        right: 5px;
     }
     
-    #fileName {
+    .toggle-menu-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    /* Đảm bảo tiêu đề canh giữa và không bị chồng lên */
+    #header-text h1 {
+        text-align: center;
+        padding-right: 0;
+        width: 100%;
+    }
+    
+    /* Ẩn các nút không cần thiết trên mobile */
+    #file-selection,
+    #image-selection,
+    #capture-selection {
+        display: none;
+    }
+    
+    /* Chỉ hiển thị các nút chính */
+    #main-controls {
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+    
+    /* Buttons chính nhỏ hơn trên mobile */
+    #controls {
+        gap: var(--spacing-sm);
+    }
+    
+    #controls button {
+        padding: 8px 12px;
+        font-size: 13px;
+        min-width: 60px;
+    }
+    
+    /* Advanced menu styles cho mobile */
+    .advanced-menu {
+        background-color: var(--bg-white);
+        border: 1px solid var(--border-light);
+    }
+    
+    /* Styles cho các nút trong advanced menu */
+    #mobile-file-selection,
+    #mobile-image-selection,
+    #mobile-capture-selection {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+    
+    #mobile-file-selection label,
+    #mobile-image-selection label,
+    #mobile-capture-selection label {
+        padding: 8px 12px;
+        font-size: 13px;
+        margin-right: var(--spacing-sm);
+    }
+    
+    #mobileFileName,
+    #mobileImageName,
+    #mobileCaptureName {
+        font-size: 12px;
+        padding: 6px 10px;
         max-width: 120px;
     }
     
     #resultArea {
-        max-height: calc(100vh - 280px);
+        max-height: calc(100vh - 180px);
         padding: var(--spacing-md);
+        margin: var(--spacing-sm) auto;
+    }
+    
+    /* Search input nhỏ hơn */
+    #searchInput {
+        margin: var(--spacing-sm) auto 0;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 14px;
     }
 }
 
 #searchButton:active {
-    background-color: #002A54 !important;
+    background-color: #001a33 !important;
     transform: translateY(0);
     box-shadow: var(--shadow-sm);
 }
 
-/* Äáº£m báº£o nĂºt search cĂ³ thá»ƒ nháº­n focus */
+/* Đảm bảo nút search có thể nhận focus */
 #searchButton:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 87, 164, 0.3);
+    box-shadow: 0 0 0 3px rgba(0, 59, 112, 0.3);
 }
 
 /* Column F info */
@@ -400,7 +543,7 @@ button:hover {
 }
 
 #columnFInfo:before {
-    content: "â ï¸";
+    content: "⚠️";
     margin-right: var(--spacing-sm);
     font-size: 18px;
 }
@@ -447,19 +590,19 @@ button:hover {
     background-color: var(--primary) !important;
 }
 
-/* Äáº£m báº£o khĂ´ng cĂ³ pháº§n tá»­ con nĂ o trong column-f-highlight cĂ³ background mĂ u tráº¯ng */
+/* Đảm bảo không có phần tử con nào trong column-f-highlight có background màu trắng */
 .column-f-highlight * {
     background-color: inherit !important;
     color: #ffffff !important;
 }
 
-/* ThĂªm style cho pháº§n tá»­ span trong column-f-highlight náº¿u cĂ³ */
+/* Thêm style cho phần tử span trong column-f-highlight nếu có */
 .column-f-highlight span {
     background-color: var(--primary-dark) !important;
     color: #ffffff !important;
 }
 
-/* Äáº£m báº£o khĂ´ng cĂ³ style máº·c Ä‘á»‹nh nĂ o ghi Ä‘Ă¨ */
+/* Đảm bảo không có style mặc định nào ghi đè */
 #resultArea .column-f-highlight,
 #resultArea div .column-f-highlight {
     background-color: var(--primary-dark) !important;
@@ -575,7 +718,7 @@ button:hover {
 .selection-overlay {
     position: absolute;
     border: 2px solid var(--primary);
-    background-color: rgba(0, 87, 164, 0.1);
+    background-color: rgba(0, 59, 112, 0.1);
     cursor: move;
 }
 
@@ -638,4 +781,3 @@ button:hover {
         height: 30px;
     }
 }
-
